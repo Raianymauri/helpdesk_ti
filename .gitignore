@@ -1,0 +1,30 @@
+# Python
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/.pytest_cache/
+backend/.ruff_cache/
+backend/htmlcov/
+backend/.coverage
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+*-wal
+*-shm
+backend/data/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/coverage/
+
+# Ambiente
+.env
+.env.*
+!.env.example
+
+# Sistema operacional / editor
+.DS_Store
+*.log
