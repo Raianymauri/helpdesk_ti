@@ -11,6 +11,7 @@ Não existe dashboard no MVP. Após o login, o produto abre diretamente a lista 
 | Rota | Página | Acesso |
 |---|---|---|
 | `/login` | `LoginPage` | Público. |
+| `/register` | `RegisterPage` | Público. |
 | `/tickets` | `TicketListPage` | Autenticado. |
 | `/tickets/new` | `TicketCreatePage` | Solicitante. |
 | `/tickets/:ticketId` | `TicketDetailsPage` | Usuário autorizado. |
@@ -40,8 +41,19 @@ Não use sidebar, menu hambúrguer, breadcrumbs, notificações globais ou modal
 - Erro de credencial usa mensagem genérica: “E-mail ou senha inválidos.”
 - Erro de conexão preserva o e-mail, limpa a senha e oferece “Tentar novamente”.
 - Login concluído leva a `/tickets`.
+- Link “Criar conta” leva a `/register`.
 
-Não incluir “Criar conta”, “Esqueci minha senha” ou login social.
+Não incluir “Esqueci minha senha” ou login social.
+
+### 4.1-b Cadastro (`/register`)
+
+- Campos “Nome”, “E-mail”, “Senha” e “Confirmar senha”, todos com labels visíveis.
+- Conta criada é sempre `REQUESTER`; não há seleção de papel na UI.
+- Validação de tamanho (nome, senha ≥ 8) e conferência de senha antes do envio; erros associados ao campo.
+- Durante envio, botão fica protegido contra duplicidade e informa “Criando conta…”.
+- E-mail já cadastrado mostra erro associado ao campo “E-mail”.
+- Sucesso autentica automaticamente e navega para `/tickets`.
+- Link “Entrar” leva a `/login`.
 
 ### 4.2 Lista de chamados
 
@@ -117,21 +129,26 @@ Falha ao comentar preserva o texto. Em `RESOLVED`, a interface mantém comentár
 - Requisição cancelada por desmontagem não atualiza estado obsoleto.
 - Não duplique resposta da API em múltiplos estados; derive filtros, permissões visuais e rótulos quando possível.
 
-## 6. Sistema visual monocromático
+## 6. Sistema visual
 
-Somente os seguintes tokens e derivados de preto, branco e cinza são permitidos:
+Paleta neutra com um único acento de marca (indigo), tokenizada em `styles/tokens.css`:
 
 ```css
 :root {
-  --color-background: #f7f7f7;
+  --color-background: #f4f5f9;
   --color-surface: #ffffff;
-  --color-text: #111111;
-  --color-text-muted: #5f5f5f;
-  --color-border: #737373;
-  --color-subtle: #e8e8e8;
-  --color-primary: #000000;
+  --color-text: #14161a;
+  --color-text-muted: #62666f;
+  --color-border: #e1e3ea;
+  --color-subtle: #ececf3;
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
   --color-on-primary: #ffffff;
-  --color-focus: #000000;
+  --color-focus: #4f46e5;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
 }
 ```
 
@@ -141,13 +158,13 @@ Diretrizes:
 - corpo mínimo `16px`, line-height `1.5`;
 - texto auxiliar mínimo `14px`;
 - escala de espaço `4, 8, 12, 16, 24, 32, 48px`;
-- botão primário preto com texto branco;
-- botão secundário branco com texto e borda pretos;
-- raio discreto, no máximo `8px`;
-- sem gradiente, sombra decorativa, glassmorphism ou animação ornamental;
-- hierarquia por tipografia, espaço, borda e peso, não por novas cores.
+- botão primário com acento de marca e texto branco; botão secundário com superfície neutra e borda;
+- cantos arredondados: `--radius-sm`/`md` em campos e cartões, `--radius-pill` em botões e badges;
+- cartões e o cartão de autenticação usam sombra suave (`--shadow-sm`/`--shadow-md`), nunca gradiente ou glassmorphism;
+- transições curtas (`transition-fast`, ~150ms) em hover/foco; respeitam `prefers-reduced-motion`;
+- hierarquia por tipografia, espaço, borda, peso e o acento de marca — nunca só por matiz.
 
-Status e prioridade usam rótulo por extenso. Estilos de borda ou peso podem reforçar a diferença, mas nunca substituem o texto.
+Status e prioridade usam rótulo por extenso; o badge colorido é reforço visual adicional, nunca o único sinal (contraste de texto verificado ≥ 4,5:1 em cada variante de badge).
 
 ## 7. Responsividade
 

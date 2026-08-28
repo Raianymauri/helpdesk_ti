@@ -2,7 +2,12 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
-import { fetchCurrentUser, signIn as apiSignIn, signOut as apiSignOut } from "../api/auth";
+import {
+  fetchCurrentUser,
+  registerUser as apiRegisterUser,
+  signIn as apiSignIn,
+  signOut as apiSignOut,
+} from "../api/auth";
 
 export const AuthContext = createContext(null);
 
@@ -31,14 +36,20 @@ export function AuthProvider({ children }) {
     return signedInUser;
   }, []);
 
+  const register = useCallback(async (displayName, email, password) => {
+    const registeredUser = await apiRegisterUser(displayName, email, password);
+    setUser(registeredUser);
+    return registeredUser;
+  }, []);
+
   const signOut = useCallback(async () => {
     await apiSignOut();
     setUser(null);
   }, []);
 
   const value = useMemo(
-    () => ({ user, isLoadingSession, signIn, signOut }),
-    [user, isLoadingSession, signIn, signOut],
+    () => ({ user, isLoadingSession, signIn, register, signOut }),
+    [user, isLoadingSession, signIn, register, signOut],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -10,7 +10,7 @@ export function TicketCard({ ticket, showRequester }) {
       <div className="ticket-card__header">
         <span className="ticket-card__title">
           <Link to={`/tickets/${ticket.id}`}>
-            {ticket.number} · {ticket.title}
+            <span className="ticket-number">{ticket.number}</span> · {ticket.title}
           </Link>
         </span>
         <div className="ticket-card__badges">

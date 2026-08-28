@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Route, Routes } from "react-router";
 import { describe, expect, it, vi } from "vitest";
@@ -28,15 +28,11 @@ describe("AppLayout", () => {
     expect(signOut).toHaveBeenCalled();
   });
 
-  it("shows 'Novo chamado' only for a requester", () => {
+  it("keeps navigation limited to wayfinding, without a page action", () => {
     renderLayout({ user: buildUser({ role: "REQUESTER" }) });
 
-    expect(screen.getByRole("link", { name: "Novo chamado" })).toBeInTheDocument();
-  });
-
-  it("hides 'Novo chamado' for an agent", () => {
-    renderLayout({ user: buildUser({ role: "AGENT" }) });
-
-    expect(screen.queryByRole("link", { name: "Novo chamado" })).not.toBeInTheDocument();
+    const nav = screen.getByRole("navigation", { name: "Navegação principal" });
+    expect(within(nav).getByRole("link", { name: "Chamados" })).toBeInTheDocument();
+    expect(within(nav).queryByRole("link", { name: "Novo chamado" })).not.toBeInTheDocument();
   });
 });

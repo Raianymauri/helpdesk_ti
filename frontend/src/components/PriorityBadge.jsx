@@ -1,9 +1,15 @@
 import { TICKET_PRIORITY_LABELS } from "../domain/tickets";
 
+const FILL_BY_PRIORITY = {
+  LOW: "badge--fill-none",
+  MEDIUM: "badge--fill-soft",
+  HIGH: "badge--fill-solid",
+};
+
 export function PriorityBadge({ priority }) {
-  const isHighPriority = priority === "HIGH";
+  const fillClass = FILL_BY_PRIORITY[priority] ?? "badge--fill-none";
   return (
-    <span className={isHighPriority ? "badge badge--priority-high" : "badge"}>
+    <span className={`badge ${fillClass}`}>
       Prioridade: {TICKET_PRIORITY_LABELS[priority] ?? priority}
     </span>
   );

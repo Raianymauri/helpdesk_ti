@@ -72,12 +72,27 @@ describe("TicketListPage", () => {
     expect(await screen.findByText("Solicitante: Maria Silva")).toBeInTheDocument();
   });
 
-  it("shows the empty state without filters for a requester", async () => {
+  it("shows the empty state with a call to action for a requester", async () => {
     ticketsApi.listTickets.mockResolvedValue({ items: [], page: 1, page_size: 20, total: 0 });
 
     renderWithAuth(<TicketListPage />, { authValue: { user: buildUser() } });
 
     expect(await screen.findByText(/ainda não abriu nenhum chamado/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Criar o primeiro chamado" })).toBeInTheDocument();
+  });
+
+  it("shows the page-level 'Novo chamado' action only for a requester", async () => {
+    ticketsApi.listTickets.mockResolvedValue({ items: [], page: 1, page_size: 20, total: 0 });
+
+    const { unmount } = renderWithAuth(<TicketListPage />, {
+      authValue: { user: buildUser({ role: "REQUESTER" }) },
+    });
+    expect(await screen.findByRole("link", { name: "Novo chamado" })).toBeInTheDocument();
+    unmount();
+
+    renderWithAuth(<TicketListPage />, { authValue: { user: buildUser({ role: "AGENT" }) } });
+    await screen.findByRole("heading", { name: "Fila de chamados" });
+    expect(screen.queryByRole("link", { name: "Novo chamado" })).not.toBeInTheDocument();
   });
 
   it("recovers from an error via the retry button", async () => {

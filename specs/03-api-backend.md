@@ -51,6 +51,18 @@
 
 ## Autenticação
 
+### `POST /api/auth/register`
+
+```json
+{
+  "display_name": "Maria Silva",
+  "email": "maria@example.test",
+  "password": "senha-com-8-ou-mais-caracteres"
+}
+```
+
+Cria uma conta sempre com papel `REQUESTER` — o corpo não aceita `role`; qualquer campo desconhecido é rejeitado (`422`). Sucesso cria sessão, define cookie e retorna `201` com o usuário (mesmo formato de `/login`). E-mail já cadastrado retorna `409 EMAIL_ALREADY_REGISTERED`. Contas `AGENT` continuam exclusivas do comando administrativo.
+
 ### `POST /api/auth/login`
 
 ```json
@@ -227,6 +239,7 @@ Formato compacto e estável:
 | 403 | `FORBIDDEN` | Papel ou agente sem permissão. |
 | 403 | `ORIGIN_NOT_ALLOWED` | Origem inválida em mutação. |
 | 404 | `TICKET_NOT_FOUND` | Inexistente ou invisível. |
+| 409 | `EMAIL_ALREADY_REGISTERED` | Cadastro com e-mail já existente. |
 | 409 | `TICKET_ALREADY_CLAIMED` | Concorrência ao assumir. |
 | 409 | `INVALID_STATUS_TRANSITION` | Transição não permitida. |
 | 422 | `VALIDATION_ERROR` | Campo/parâmetro inválido; `fields` identifica o campo. |

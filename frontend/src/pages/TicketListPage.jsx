@@ -9,7 +9,7 @@ import { TICKET_STATUS_LABELS, TICKET_STATUS_OPTIONS } from "../domain/tickets";
 
 const PAGE_SIZE = 20;
 
-function TicketFilterForm({ initialQuery, initialStatus, onSubmit, isAgent }) {
+function TicketFilterForm({ initialQuery, initialStatus, onSubmit }) {
   const [draftQuery, setDraftQuery] = useState(initialQuery);
   const [draftStatus, setDraftStatus] = useState(initialStatus);
 
@@ -51,11 +51,6 @@ function TicketFilterForm({ initialQuery, initialStatus, onSubmit, isAgent }) {
       <button className="button button--primary" type="submit">
         Buscar
       </button>
-      {!isAgent && (
-        <Link className="button button--secondary" to="/tickets/new">
-          Novo chamado
-        </Link>
-      )}
     </form>
   );
 }
@@ -99,7 +94,7 @@ function TicketResults({ query, status, page, retryToken, isAgent, hasActiveFilt
 
   if (tickets.length === 0 && hasActiveFilters) {
     return (
-      <div className="alert">
+      <div className="empty-state">
         <p>Nenhum chamado corresponde aos filtros.</p>
         <button className="button button--secondary" type="button" onClick={onClearFilters}>
           Limpar filtros
@@ -110,11 +105,16 @@ function TicketResults({ query, status, page, retryToken, isAgent, hasActiveFilt
 
   if (tickets.length === 0) {
     return (
-      <p>
-        {isAgent
-          ? "A fila de chamados está vazia."
-          : "Você ainda não abriu nenhum chamado. Crie o primeiro clicando em “Novo chamado”."}
-      </p>
+      <div className="empty-state">
+        <p>
+          {isAgent ? "A fila de chamados está vazia." : "Você ainda não abriu nenhum chamado."}
+        </p>
+        {!isAgent && (
+          <Link className="button button--primary" to="/tickets/new">
+            Criar o primeiro chamado
+          </Link>
+        )}
+      </div>
     );
   }
 
@@ -187,16 +187,22 @@ export function TicketListPage() {
 
   return (
     <main className="app-main">
-      <h1 ref={headingRef} tabIndex={-1}>
-        {pageTitle}
-      </h1>
+      <div className="page-header">
+        <h1 ref={headingRef} tabIndex={-1}>
+          {pageTitle}
+        </h1>
+        {!isAgent && (
+          <Link className="button button--primary" to="/tickets/new">
+            Novo chamado
+          </Link>
+        )}
+      </div>
 
       <TicketFilterForm
         key={`${appliedQuery}::${appliedStatus}`}
         initialQuery={appliedQuery}
         initialStatus={appliedStatus}
         onSubmit={applyFilters}
-        isAgent={isAgent}
       />
 
       <TicketResults

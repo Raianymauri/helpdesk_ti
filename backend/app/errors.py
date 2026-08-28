@@ -79,3 +79,11 @@ def invalid_status_transition() -> ApiError:
         "INVALID_STATUS_TRANSITION",
         "Não é possível realizar esta transição.",
     )
+
+
+def email_already_registered() -> ApiError:
+    return ApiError(
+        status.HTTP_409_CONFLICT,
+        "EMAIL_ALREADY_REGISTERED",
+        "Este e-mail já está cadastrado.",
+    )
