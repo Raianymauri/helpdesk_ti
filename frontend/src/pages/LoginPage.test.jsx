@@ -12,6 +12,7 @@ function renderLoginPage(authValue) {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/tickets" element={<p>Lista de chamados</p>} />
+      <Route path="/register" element={<p>Página de cadastro</p>} />
     </Routes>,
     { authValue, route: "/login" },
   );
@@ -65,5 +66,13 @@ describe("LoginPage", () => {
     await userEvent.click(screen.getByRole("button", { name: "Entrar" }));
 
     await waitFor(() => expect(screen.getByText("Lista de chamados")).toBeInTheDocument());
+  });
+
+  it("links to the registration page", async () => {
+    renderLoginPage({ signIn: vi.fn() });
+
+    await userEvent.click(screen.getByRole("link", { name: "Criar conta" }));
+
+    expect(await screen.findByText("Página de cadastro")).toBeInTheDocument();
   });
 });

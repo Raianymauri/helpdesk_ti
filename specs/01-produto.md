@@ -10,6 +10,7 @@ A sofisticação do MVP está na correção, segurança, clareza, acessibilidade
 
 ### Solicitante (`REQUESTER`)
 
+- cria a própria conta por autocadastro (sempre como `REQUESTER`);
 - autentica-se;
 - cria chamado;
 - lista e consulta somente os próprios chamados;
@@ -26,20 +27,20 @@ A sofisticação do MVP está na correção, segurança, clareza, acessibilidade
 - resolve ou reabre o chamado que assumiu;
 - comenta em qualquer chamado.
 
-Contas são criadas por comando administrativo. Não existe cadastro ou administração de usuários pela interface.
+Solicitantes se autocadastram pela UI (`/register`); a conta criada é sempre `REQUESTER`. Contas `AGENT` continuam criadas apenas por comando administrativo — não existe seleção de papel nem gestão de usuários na interface.
 
 ## Escopo exato
 
 Incluído:
 
-- login e logout;
+- autocadastro de solicitante, login e logout;
 - lista paginada com busca por número/título e filtro de status;
 - criação e detalhe de chamado;
 - prioridade `LOW`, `MEDIUM` ou `HIGH`;
 - agente assumir/liberar chamado;
 - estados `OPEN`, `IN_PROGRESS` e `RESOLVED`;
 - comentários públicos;
-- interface pt-BR, monocromática, responsiva e acessível;
+- interface pt-BR, responsiva e acessível;
 - testes automatizados de backend e frontend;
 - CI no GitHub.
 
@@ -51,11 +52,11 @@ Fora do MVP:
 - edição ou exclusão de chamado/comentário;
 - atribuição de um chamado a outro agente;
 - pesquisa avançada e ações em lote;
-- cadastro, recuperação de senha ou gestão de usuários na UI;
+- autocadastro de agente, recuperação de senha ou gestão de usuários na UI;
 - integrações externas, deploy e serviços cloud;
 - outro banco além de SQLite;
 - Redis, cache, filas, workers e microsserviços;
-- tema alternativo, design system e biblioteca de componentes.
+- design system externo ou biblioteca de componentes de terceiros.
 
 Itens fora do escopo não devem gerar código, tabela, configuração, botão desabilitado ou `TODO` preventivo.
 

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 
 import { ApiError } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
@@ -46,43 +46,49 @@ export function LoginPage() {
   }
 
   return (
-    <main className="app-main">
-      <h1 ref={headingRef} tabIndex={-1}>
-        Entrar
-      </h1>
-      <form className="form" onSubmit={handleSubmit} noValidate>
-        {errorMessage && (
-          <p className="alert alert--error" role="alert">
-            {errorMessage}
-          </p>
-        )}
-        <div className="field">
-          <label htmlFor="email">E-mail</label>
-          <input
-            ref={emailFieldRef}
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="username"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </div>
-        <div className="field">
-          <label htmlFor="password">Senha</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </div>
-        <button className="button button--primary" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Entrando…" : "Entrar"}
-        </button>
-      </form>
+    <main className="auth-shell">
+      <p className="auth-brand">Helpdesk TI</p>
+      <div className="auth-card">
+        <h1 ref={headingRef} tabIndex={-1}>
+          Entrar
+        </h1>
+        <form className="form" onSubmit={handleSubmit} noValidate>
+          {errorMessage && (
+            <p className="alert alert--error" role="alert">
+              {errorMessage}
+            </p>
+          )}
+          <div className="field">
+            <label htmlFor="email">E-mail</label>
+            <input
+              ref={emailFieldRef}
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="username"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="password">Senha</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </div>
+          <button className="button button--primary" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Entrando…" : "Entrar"}
+          </button>
+        </form>
+        <p className="form-footer-note">
+          Ainda não tem conta? <Link to="/register">Criar conta</Link>
+        </p>
+      </div>
     </main>
   );
 }

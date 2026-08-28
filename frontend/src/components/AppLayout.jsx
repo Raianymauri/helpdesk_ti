@@ -31,7 +31,6 @@ function AuthenticatedShell() {
           <NavLink to="/tickets" end>
             Chamados
           </NavLink>
-          {user.role === "REQUESTER" && <NavLink to="/tickets/new">Novo chamado</NavLink>}
         </div>
       </nav>
       <Outlet />

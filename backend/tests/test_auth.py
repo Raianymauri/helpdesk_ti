@@ -14,6 +14,77 @@ from app.database import utc_now
 from tests.conftest import TEST_PASSWORD
 
 
+def test_register_creates_a_requester_account_and_signs_in(client: TestClient) -> None:
+    response = client.post(
+        "/api/auth/register",
+        json={
+            "display_name": "Maria Silva",
+            "email": "maria@example.test",
+            "password": "senha-forte-1",
+        },
+    )
+
+    assert response.status_code == 201
+    assert response.json() == {
+        "id": 1,
+        "display_name": "Maria Silva",
+        "email": "maria@example.test",
+        "role": "REQUESTER",
+    }
+    assert client.cookies.get(SESSION_COOKIE_NAME)
+    assert client.get("/api/auth/me").json()["role"] == "REQUESTER"
+
+
+def test_register_rejects_a_duplicate_email(
+    client: TestClient, create_user: Callable[..., User]
+) -> None:
+    create_user("maria@example.test")
+
+    response = client.post(
+        "/api/auth/register",
+        json={
+            "display_name": "Outra Maria",
+            "email": "Maria@Example.test",
+            "password": "senha-forte-1",
+        },
+    )
+
+    assert response.status_code == 409
+    assert response.json()["detail"]["code"] == "EMAIL_ALREADY_REGISTERED"
+
+
+def test_register_cannot_choose_a_role(client: TestClient) -> None:
+    response = client.post(
+        "/api/auth/register",
+        json={
+            "display_name": "Maria Silva",
+            "email": "maria@example.test",
+            "password": "senha-forte-1",
+            "role": "AGENT",
+        },
+    )
+
+    assert response.status_code == 422
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [("display_name", "M"), ("email", "invalido"), ("password", "curta")],
+)
+def test_register_validates_fields(client: TestClient, field: str, value: str) -> None:
+    payload = {
+        "display_name": "Maria Silva",
+        "email": "maria@example.test",
+        "password": "senha-forte-1",
+    }
+    payload[field] = value
+
+    response = client.post("/api/auth/register", json=payload)
+
+    assert response.status_code == 422
+    assert field in response.json()["detail"]["fields"]
+
+
 def test_login_creates_session_and_me_returns_user(
     client: TestClient, create_user: Callable[..., User]
 ) -> None:

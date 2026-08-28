@@ -30,6 +30,8 @@ Não adicionar Playwright, snapshot extenso, teste de carga, mutação, regress�
 
 ### Autenticação
 
+- autocadastro cria conta `REQUESTER` e já autentica (define cookie);
+- autocadastro rejeita e-mail duplicado e não aceita escolha de papel;
 - login válido cria cookie e `/api/auth/me` retorna usuário;
 - senha errada e usuário inexistente retornam resposta pública equivalente;
 - sessão ausente, inválida e expirada falha;
@@ -69,6 +71,13 @@ Não adicionar Playwright, snapshot extenso, teste de carga, mutação, regress�
 - arquivo de desenvolvimento nunca é aberto nos testes.
 
 ## Testes obrigatórios do frontend
+
+### Cadastro
+
+- valida nome, e-mail e senha antes de enviar (inclui confirmação de senha);
+- impede envio duplicado e preserva dados em falha;
+- mostra erro de campo para e-mail já cadastrado;
+- sucesso autentica e navega para a lista.
 
 ### Login
 
@@ -155,13 +164,13 @@ Os comandos exatos e diretórios devem constar no `README.md`. GitHub Actions ex
 
 Antes da PR inicial:
 
-1. executar login como solicitante;
+1. criar conta por autocadastro e executar login como solicitante;
 2. criar, listar, abrir e comentar;
 3. executar login como agente;
 4. assumir, alterar prioridade, resolver, reabrir e liberar quando permitido;
 5. repetir navegação essencial só com teclado;
 6. conferir 320 CSS px e zoom de 200%;
-7. confirmar foco visível, labels e contraste monocromático.
+7. confirmar foco visível, labels e contraste dos tokens de cor (texto normal e badges).
 
 Registrar no PR apenas “smoke manual concluído” ou o bloqueio real; não incluir roteiro longo.
 

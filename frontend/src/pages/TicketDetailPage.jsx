@@ -148,7 +148,7 @@ function TicketView({ ticketId, onRetry }) {
   return (
     <>
       <h1 ref={headingRef} tabIndex={-1}>
-        {ticket.number} · {ticket.title}
+        <span className="ticket-number">{ticket.number}</span> · {ticket.title}
       </h1>
 
       {actionError && (

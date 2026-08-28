@@ -3,16 +3,20 @@
 from fastapi import APIRouter, Depends, Request, Response, status
 
 from app.auth.dependencies import CurrentUser, DatabaseSession, require_allowed_origin
-from app.auth.schemas import AuthenticatedUserResponse, LoginRequest
-from app.auth.service import SESSION_COOKIE_NAME, authenticate_user, end_session, start_session
+from app.auth.schemas import AuthenticatedUserResponse, LoginRequest, RegisterRequest
+from app.auth.service import (
+    SESSION_COOKIE_NAME,
+    authenticate_user,
+    end_session,
+    register_user,
+    start_session,
+)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/login", response_model=AuthenticatedUserResponse)
-def login(payload: LoginRequest, request: Request, response: Response, db_session: DatabaseSession):
+def _sign_in_response(user, request: Request, response: Response, db_session: DatabaseSession):
     settings = request.app.state.settings
-    user = authenticate_user(db_session, payload.email, payload.password)
     token, max_age_seconds = start_session(db_session, user, settings.session_timeout_minutes)
     response.set_cookie(
         SESSION_COOKIE_NAME,
@@ -24,6 +28,22 @@ def login(payload: LoginRequest, request: Request, response: Response, db_sessio
         path="/",
     )
     return user
+
+
+@router.post(
+    "/register", response_model=AuthenticatedUserResponse, status_code=status.HTTP_201_CREATED
+)
+def register(
+    payload: RegisterRequest, request: Request, response: Response, db_session: DatabaseSession
+):
+    user = register_user(db_session, payload.display_name, payload.email, payload.password)
+    return _sign_in_response(user, request, response, db_session)
+
+
+@router.post("/login", response_model=AuthenticatedUserResponse)
+def login(payload: LoginRequest, request: Request, response: Response, db_session: DatabaseSession):
+    user = authenticate_user(db_session, payload.email, payload.password)
+    return _sign_in_response(user, request, response, db_session)
 
 
 @router.post(

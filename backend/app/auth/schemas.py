@@ -9,6 +9,7 @@ EmailAddress = Annotated[
     str,
     StringConstraints(strip_whitespace=True, max_length=320, pattern=r"^[^@\s]+@[^@\s]+\.[^@\s]+$"),
 ]
+DisplayName = Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=100)]
 
 
 class LoginRequest(BaseModel):
@@ -16,6 +17,16 @@ class LoginRequest(BaseModel):
 
     email: EmailAddress
     password: str = Field(min_length=1, max_length=200)
+
+
+class RegisterRequest(BaseModel):
+    """Cadastro público sempre cria conta REQUESTER; agentes seguem provisionados por comando."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    display_name: DisplayName
+    email: EmailAddress
+    password: str = Field(min_length=8, max_length=200)
 
 
 class AuthenticatedUserResponse(BaseModel):

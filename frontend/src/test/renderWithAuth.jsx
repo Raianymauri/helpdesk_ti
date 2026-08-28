@@ -18,6 +18,7 @@ export function renderWithAuth(ui, { authValue, route = "/", ...renderOptions } 
     user: null,
     isLoadingSession: false,
     signIn: () => Promise.resolve(),
+    register: () => Promise.resolve(),
     signOut: () => Promise.resolve(),
     ...authValue,
   };
